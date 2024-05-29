@@ -1,19 +1,21 @@
-use openssl::cipher::Cipher;
+use openssl::symm::{encrypt, decrypt, Cipher};
 use std::fs::File;
 use std::io::{self, Read};
 
-fn encrypt() {
+fn encrypt_handler(algorithm: Cipher, key: &[u8], iv: &[u8], plaintext: &[u8]) {
     println!("encrypting files");
-    let key = aes_256_cbc();
-    println!("{}", key);
+    encrypt(algorithm, key, iv, plaintext);
+
 }
 
-fn decrypt() {
+fn decrypt_handler() {
     println!("decrypting files");
 }
 
 fn main() {
+    
     println!("encrypt | decrypt");
+
     let mut input = String::new();
 
     let file = File::open("trucy_config.txt");
@@ -42,11 +44,14 @@ fn main() {
 
     println!("selected: {}", input.trim());
 
+
+    let algo = Cipher::aes_256_cbc();
+
     if input == "encrypt" {
         if config == "status: masked" {
             println!("already encrypted, if you wish to encrypt with a different key, decrypt then encrypt again");
         } else {
-            encrypt();
+            //encrypt_handler(algo);
         }
     } else if input == "decrypt" {
         if config == "status: plain" {
